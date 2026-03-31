@@ -283,8 +283,8 @@ export default function HomeScreen() {
         {/* Celebration overlay */}
         {showCelebration && (
           <Animated.View
-            style={[styles.celebration, { backgroundColor: colors.background }, celebrationAnimStyle]}
-            pointerEvents="none"
+            testID="celebration-overlay"
+            style={[styles.celebration, { backgroundColor: colors.background, pointerEvents: 'none' }, celebrationAnimStyle]}
           >
             <Ionicons name="checkmark-done-circle" size={72} color={colors.accent} />
             <Text style={[styles.celebrationText, { color: colors.textPrimary, fontFamily: FONTS.serif }]}>
