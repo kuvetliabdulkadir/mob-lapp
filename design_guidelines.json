@@ -1,0 +1,86 @@
+{
+  "brand": {
+    "name": "Daily Focus Stack",
+    "archetype": "Editorial Brutalism (Swiss + Luxury Hybrid)",
+    "theme": "Dark"
+  },
+  "colors": {
+    "background": "#0A0A0A",
+    "surface": "#121212",
+    "text_primary": "#EAE6DF",
+    "text_secondary": "#737373",
+    "accent": "#FF6B00",
+    "status": {
+      "success": "#34D399",
+      "partial": "#FBBF24",
+      "fail": "#F87171"
+    },
+    "border": "rgba(234, 230, 223, 0.15)"
+  },
+  "typography": {
+    "heading_font": "Playfair Display, serif",
+    "body_font": "IBM Plex Mono, monospace",
+    "scales": {
+      "h1": "text-5xl sm:text-6xl tracking-tighter leading-none font-bold",
+      "h2": "text-3xl sm:text-4xl tracking-tight leading-tight",
+      "task_text": "text-xl sm:text-2xl leading-relaxed",
+      "label": "text-xs tracking-[0.2em] uppercase font-bold"
+    }
+  },
+  "layout": {
+    "strategy": "Minimalist, top-heavy, full-width dividers. No rounded cards. Left-align content for stark editorial feel.",
+    "spacing": "Generous. Use p-6 and p-8 for breathing room.",
+    "touch_targets": "Minimum 44px height for accessibility.",
+    "borders": "rounded-none, sharp edges everywhere."
+  },
+  "screens": {
+    "onboarding": {
+      "description": "Stark, confrontational but helpful. Massive text.",
+      "components": [
+        "Quote text: 'Sen her şeyi yapmaya çalışıyorsun. Bu yüzden hiçbirini bitiremiyorsun.' (Playfair Display, text-4xl or larger, left-aligned or centered for impact)",
+        "CTA Button: Full width at bottom, Accent color bg, Black text, 'Başla', data-testid='start-button'"
+      ]
+    },
+    "home": {
+      "description": "The core focus view. Newspaper date header, 3 distinct slots.",
+      "components": [
+        "Date Header: 'Çarşamba, 1 Nisan', Serif, very large, crisp bottom border, data-testid='date-header'",
+        "Task Slots (x3): Minimalist text inputs. No boxes, just 1px bottom borders separating them. data-testid='task-slot-1'",
+        "Empty State: Placeholder text in Mono font, text_secondary color.",
+        "Filled State: Standard Mono font, text_primary color."
+      ],
+      "interactions": {
+        "completion": "On tap, strike-through animates left-to-right. Text fades to text_secondary. Accent colored checkmark appears.",
+        "celebration": "3/3 triggers a brief amber/orange screen flash or minimalist confetti burst."
+      }
+    },
+    "history": {
+      "description": "Calendar and streak tracking.",
+      "components": [
+        "Streak Counter: Massive number at top (Serif), 'Günlük Seri' label (Mono). data-testid='streak-counter'",
+        "Calendar Grid: Minimalist boxes. Green (3/3), Yellow (partial), Red (0). data-testid='calendar-grid'"
+      ]
+    },
+    "settings": {
+      "description": "Utilitarian configuration.",
+      "components": [
+        "Time Picker: Morning notification config. data-testid='time-picker'",
+        "Theme Toggle: Dark/Light toggle. data-testid='theme-toggle'",
+        "Icon Selector: 3 minimalist options (Dots, Lines, Squares). data-testid='icon-selector'"
+      ]
+    }
+  },
+  "components": {
+    "button": "Square edges, high contrast. hover:bg-opacity-80 transition-opacity. Font: Mono, Uppercase.",
+    "input": "Transparent background, massive text, border-none focus:outline-none. Rely on parent container for bottom border.",
+    "icons": "Use Phosphor Icons (regular or light weight). Strict minimalism."
+  },
+  "motion": {
+    "general": "Minimal. No bouncy effects. Sharp, purposeful transitions.",
+    "strikethrough": "Width 0% to 100% over 200ms ease-out.",
+    "page_transition": "Fade in 150ms."
+  },
+  "testing": {
+    "requirement": "All interactive elements MUST use data-testid attributes (e.g., data-testid='task-input-1')."
+  }
+}
