@@ -1,30 +1,39 @@
-import { Text, View, StyleSheet, Image } from "react-native";
+import { useEffect, useState } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import { getSettings } from '../src/storage';
 
-const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+export default function Entry() {
+  const router = useRouter();
+  const [checking, setChecking] = useState(true);
 
-export default function Index() {
-  console.log(EXPO_PUBLIC_BACKEND_URL, "EXPO_PUBLIC_BACKEND_URL");
+  useEffect(() => {
+    (async () => {
+      const settings = await getSettings();
+      if (settings.onboardingDone) {
+        router.replace('/(tabs)' as any);
+      } else {
+        router.replace('/onboarding' as any);
+      }
+      setChecking(false);
+    })();
+  }, []);
 
-  return (
-    <View style={styles.container}>
-      <Image
-        source={require("../assets/images/app-image.png")}
-        style={styles.image}
-      />
-    </View>
-  );
+  if (checking) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#FF6B00" />
+      </View>
+    );
+  }
+  return null;
 }
 
 const styles = StyleSheet.create({
-  container: {
+  loader: {
     flex: 1,
-    backgroundColor: "#0c0c0c",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
+    backgroundColor: '#0A0A0A',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
