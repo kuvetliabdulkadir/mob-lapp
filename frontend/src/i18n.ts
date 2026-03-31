@@ -1,4 +1,4 @@
-export type Language = 'en' | 'ar' | 'de' | 'ru' | 'es' | 'bg';
+export type Language = 'en' | 'ar' | 'de' | 'ru' | 'es' | 'bg' | 'tr';
 
 export interface LangMeta {
   code: Language;
@@ -14,6 +14,7 @@ export const SUPPORTED_LANGUAGES: LangMeta[] = [
   { code: 'ru', nativeName: 'Русский', flag: '🇷🇺', rtl: false },
   { code: 'es', nativeName: 'Español', flag: '🇪🇸', rtl: false },
   { code: 'bg', nativeName: 'Български', flag: '🇧🇬', rtl: false },
+  { code: 'tr', nativeName: 'Türkçe', flag: '🇹🇷', rtl: false },
 ];
 
 export interface Translations {
@@ -186,6 +187,31 @@ export const translations: Record<Language, Translations> = {
     daysShort: ['Пон', 'Вто', 'Сря', 'Чет', 'Пет', 'Съб', 'Нед'],
     months: ['Януари', 'Февруари', 'Март', 'Април', 'Май', 'Юни', 'Юли', 'Август', 'Септември', 'Октомври', 'Ноември', 'Декември'],
     notifications: { morning: 'Какви са 3-те ти задачи днес?', evening: 'Денят свършва. Колко завърши?' },
+  },
+  tr: {
+    onboarding: {
+      line1: 'Sen her şeyi yapmaya çalışıyorsun.',
+      line2: 'Bu yüzden hiçbirini bitiremiyorsun.',
+      start: 'BAŞLA',
+    },
+    home: {
+      addTask: 'Görev ekle',
+      completed: 'TAMAMLANDI',
+      allDone: 'Bugün tamam!',
+      allDoneSub: '3/3 GÖREV TAMAMLANDI',
+      task: 'Görev',
+    },
+    history: { streak: 'GÜNLÜK SERİ', full: '3/3', partial: 'Kısmi', none: '0/3' },
+    settings: {
+      title: 'Ayarlar', morning: 'SABAH BİLDİRİMİ', theme: 'TEMA',
+      dark: 'Karanlık', light: 'Açık', icon: 'UYGULAMA İKONU',
+      dots: 'Noktalar', lines: 'Çizgiler', squares: 'Kareler', language: 'DİL',
+    },
+    tabs: { today: 'Bugün', history: 'Geçmiş', settings: 'Ayarlar' },
+    days: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+    daysShort: ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'],
+    months: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+    notifications: { morning: 'Bugünün 3 görevi ne?', evening: 'Gün bitiyor. Kaç tanesini tamamladın?' },
   },
 };
 
