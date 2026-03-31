@@ -4,15 +4,6 @@ import { Task, AppSettings, DEFAULT_SETTINGS } from './types';
 const SETTINGS_KEY = '@daily_focus_settings';
 const TASKS_PREFIX = '@daily_focus_tasks_';
 
-const TURKISH_MONTHS = [
-  'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-  'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık',
-];
-
-const TURKISH_DAYS = [
-  'Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi',
-];
-
 export async function getSettings(): Promise<AppSettings> {
   try {
     const raw = await AsyncStorage.getItem(SETTINGS_KEY);
@@ -65,7 +56,6 @@ export async function getDayCompletionMap(): Promise<Record<string, { total: num
 export function calculateStreak(data: Record<string, { total: number; completed: number }>): number {
   let streak = 0;
   const checkDate = new Date();
-
   const todayStr = toDateStr(checkDate);
   const todayData = data[todayStr];
   if (todayData && todayData.total === 3 && todayData.completed === 3) {
@@ -74,7 +64,6 @@ export function calculateStreak(data: Record<string, { total: number; completed:
   } else {
     checkDate.setDate(checkDate.getDate() - 1);
   }
-
   for (let i = 0; i < 365; i++) {
     const dateStr = toDateStr(checkDate);
     const dayData = data[dateStr];
@@ -94,13 +83,3 @@ export function toDateStr(date: Date): string {
   const d = String(date.getDate()).padStart(2, '0');
   return `${y}-${m}-${d}`;
 }
-
-export function formatTurkishDate(date: Date): string {
-  return `${TURKISH_DAYS[date.getDay()]}, ${date.getDate()} ${TURKISH_MONTHS[date.getMonth()]}`;
-}
-
-export function getTurkishMonthName(month: number): string {
-  return TURKISH_MONTHS[month];
-}
-
-export const TURKISH_DAY_SHORTS = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];

@@ -4,26 +4,20 @@ import { useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, FONTS } from '../../src/theme';
-import { getDayCompletionMap, calculateStreak, getTurkishMonthName, TURKISH_DAY_SHORTS } from '../../src/storage';
+import { useLanguage } from '../../src/language';
+import { getDayCompletionMap, calculateStreak } from '../../src/storage';
 
 export default function HistoryScreen() {
   const { colors } = useTheme();
+  const { t, monthName, dayShorts, isRTL, rtl } = useLanguage();
   const insets = useSafeAreaInsets();
   const [data, setData] = useState<Record<string, { total: number; completed: number }>>({});
   const [streak, setStreak] = useState(0);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  useFocusEffect(
-    useCallback(() => {
-      loadData();
-    }, [])
-  );
-
-  async function loadData() {
-    const map = await getDayCompletionMap();
-    setData(map);
-    setStreak(calculateStreak(map));
-  }
+  useFocusEffect(useCallback(() => {
+    getDayCompletionMap().then(map => { setData(map); setStreak(calculateStreak(map)); });
+  }, []));
 
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
@@ -39,7 +33,6 @@ export default function HistoryScreen() {
   function dateStr(day: number) {
     return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   }
-
   function getDayColor(day: number): string | undefined {
     const d = data[dateStr(day)];
     if (!d || d.total === 0) return undefined;
@@ -49,79 +42,57 @@ export default function HistoryScreen() {
   }
 
   const today = new Date();
-  const isToday = (day: number) =>
+  const isTodayFn = (day: number) =>
     day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
 
-  function prevMonth() {
-    setCurrentMonth(new Date(year, month - 1, 1));
-  }
-  function nextMonth() {
+  const prevMonth = () => setCurrentMonth(new Date(year, month - 1, 1));
+  const nextMonth = () => {
     const now = new Date();
     if (year > now.getFullYear() || (year === now.getFullYear() && month >= now.getMonth())) return;
     setCurrentMonth(new Date(year, month + 1, 1));
-  }
+  };
 
   return (
-    <ScrollView
-      testID="history-screen"
-      style={[styles.container, { backgroundColor: colors.background }]}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + 16 }]}
-    >
-      {/* Streak */}
+    <ScrollView testID="history-screen" style={[styles.container, { backgroundColor: colors.background }]}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + 16 }]}>
+
       <View style={styles.streakSection}>
-        <Text testID="streak-counter" style={[styles.streakNum, { color: colors.accent, fontFamily: FONTS.serif }]}>
-          {streak}
-        </Text>
-        <Text style={[styles.streakLabel, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>
-          GÜNLÜK SERİ
-        </Text>
+        <Text testID="streak-counter" style={[styles.streakNum, { color: colors.accent, fontFamily: FONTS.serif }]}>{streak}</Text>
+        <Text style={[styles.streakLabel, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>{t.history.streak}</Text>
       </View>
 
       <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-      {/* Month Nav */}
-      <View style={styles.monthNav}>
+      <View style={[styles.monthNav, rtl.row]}>
         <TouchableOpacity testID="prev-month-btn" onPress={prevMonth} hitSlop={12}>
-          <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
+          <Ionicons name={isRTL ? 'chevron-forward' : 'chevron-back'} size={24} color={colors.textPrimary} />
         </TouchableOpacity>
         <Text style={[styles.monthText, { color: colors.textPrimary, fontFamily: FONTS.serif }]}>
-          {getTurkishMonthName(month)} {year}
+          {monthName(month)} {year}
         </Text>
         <TouchableOpacity testID="next-month-btn" onPress={nextMonth} hitSlop={12}>
-          <Ionicons name="chevron-forward" size={24} color={colors.textPrimary} />
+          <Ionicons name={isRTL ? 'chevron-back' : 'chevron-forward'} size={24} color={colors.textPrimary} />
         </TouchableOpacity>
       </View>
 
-      {/* Day Headers */}
       <View style={styles.dayHeaders}>
-        {TURKISH_DAY_SHORTS.map(d => (
+        {dayShorts.map(d => (
           <View key={d} style={styles.dayHeaderCell}>
-            <Text style={[styles.dayHeaderText, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>
-              {d}
-            </Text>
+            <Text style={[styles.dayHeaderText, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>{d}</Text>
           </View>
         ))}
       </View>
 
-      {/* Calendar Grid */}
       <View testID="calendar-grid" style={styles.calGrid}>
         {cells.map((day, i) => {
           const color = day ? getDayColor(day) : undefined;
-          const todayMark = day ? isToday(day) : false;
+          const todayMark = day ? isTodayFn(day) : false;
           return (
             <View key={i} style={styles.calCell}>
               {day !== null && (
-                <View style={[
-                  styles.calDayWrap,
-                  todayMark && { borderWidth: 1, borderColor: colors.accent },
-                ]}>
-                  <Text style={[
-                    styles.calDayNum,
-                    { color: color ? '#FFF' : colors.textPrimary, fontFamily: FONTS.mono },
-                    color ? { backgroundColor: color, borderRadius: 0, overflow: 'hidden' } : null,
-                  ]}>
-                    {day}
-                  </Text>
+                <View style={[styles.calDayWrap, todayMark && { borderWidth: 1, borderColor: colors.accent }]}>
+                  <Text style={[styles.calDayNum, { color: color ? '#FFF' : colors.textPrimary, fontFamily: FONTS.mono },
+                    color ? { backgroundColor: color } : null]}>{day}</Text>
                   {color && <View style={[styles.calDot, { backgroundColor: color }]} />}
                 </View>
               )}
@@ -130,19 +101,18 @@ export default function HistoryScreen() {
         })}
       </View>
 
-      {/* Legend */}
       <View style={styles.legend}>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: colors.success }]} />
-          <Text style={[styles.legendText, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>3/3</Text>
+          <Text style={[styles.legendText, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>{t.history.full}</Text>
         </View>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: colors.partial }]} />
-          <Text style={[styles.legendText, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>Kısmi</Text>
+          <Text style={[styles.legendText, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>{t.history.partial}</Text>
         </View>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: colors.fail }]} />
-          <Text style={[styles.legendText, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>0/3</Text>
+          <Text style={[styles.legendText, { color: colors.textSecondary, fontFamily: FONTS.mono }]}>{t.history.none}</Text>
         </View>
       </View>
     </ScrollView>

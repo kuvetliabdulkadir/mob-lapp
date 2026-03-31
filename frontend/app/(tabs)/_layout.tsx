@@ -2,21 +2,21 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
 import { useTheme, FONTS } from '../../src/theme';
+import { useLanguage } from '../../src/language';
 
 function TodayIcon({ color, size }: { color: string; size: number }) {
   return <Ionicons name="today-outline" size={size} color={color} />;
 }
-
 function CalendarIcon({ color, size }: { color: string; size: number }) {
   return <Ionicons name="calendar-outline" size={size} color={color} />;
 }
-
 function SettingsIcon({ color, size }: { color: string; size: number }) {
   return <Ionicons name="options-outline" size={size} color={color} />;
 }
 
 export default function TabLayout() {
   const { colors } = useTheme();
+  const { t } = useLanguage();
 
   return (
     <Tabs
@@ -40,27 +40,9 @@ export default function TabLayout() {
         },
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Bugün',
-          tabBarIcon: TodayIcon,
-        }}
-      />
-      <Tabs.Screen
-        name="history"
-        options={{
-          title: 'Geçmiş',
-          tabBarIcon: CalendarIcon,
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'Ayarlar',
-          tabBarIcon: SettingsIcon,
-        }}
-      />
+      <Tabs.Screen name="index" options={{ title: t.tabs.today, tabBarIcon: TodayIcon }} />
+      <Tabs.Screen name="history" options={{ title: t.tabs.history, tabBarIcon: CalendarIcon }} />
+      <Tabs.Screen name="settings" options={{ title: t.tabs.settings, tabBarIcon: SettingsIcon }} />
     </Tabs>
   );
 }

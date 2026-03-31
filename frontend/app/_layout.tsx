@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider, useTheme } from '../src/theme';
+import { LanguageProvider } from '../src/language';
 
 function RootInner() {
   const { isDark } = useTheme();
@@ -19,7 +20,9 @@ function RootInner() {
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      <RootInner />
+      <LanguageProvider>
+        <RootInner />
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

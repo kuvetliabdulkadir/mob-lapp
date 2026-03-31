@@ -10,6 +10,7 @@ export interface AppSettings {
   theme: 'dark' | 'light';
   appIcon: 'dots' | 'lines' | 'squares';
   onboardingDone: boolean;
+  language: string;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -18,4 +19,5 @@ export const DEFAULT_SETTINGS: AppSettings = {
   theme: 'dark',
   appIcon: 'dots',
   onboardingDone: false,
+  language: '',
 };
